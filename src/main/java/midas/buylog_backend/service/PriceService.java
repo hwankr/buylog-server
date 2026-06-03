@@ -63,8 +63,14 @@ public class PriceService {
         StringBuilder compactData = new StringBuilder();
         for (int i = 0; i < uniqueProducts.size(); i++) {
             ProductDto p = uniqueProducts.get(i);
-            compactData.append(String.format("[%d] 쇼핑몰: %s / 상품명: %s / 총 가격: %d원 / 수량: %d개 / 개당 가격: %d원\n",
-                    i, p.getSource(), p.getTitle(), p.getTotalPrice(), p.getQuantity(), p.getUnitPrice()));
+
+            String nameHint = p.getTitle();
+            int quantity = p.getQuantity();
+
+            compactData.append(String.format(
+                    "[%d] 쇼핑몰: %s / 상품명: %s / 총 가격: %d원 / 수량: %d개 / 개당 가격: %d원\n",
+                    i, p.getSource(), nameHint, p.getTotalPrice(), quantity, p.getUnitPrice()
+            ));
         }
 
         String openaiUrl = "https://api.openai.com/v1/chat/completions";
