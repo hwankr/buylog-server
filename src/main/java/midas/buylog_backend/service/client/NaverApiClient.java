@@ -4,7 +4,6 @@ import midas.buylog_backend.dto.ProductDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import midas.buylog_backend.service.client.ShoppingApiClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -49,10 +48,15 @@ public class NaverApiClient implements ShoppingApiClient {
             JsonNode items = root.path("items");
 
             for (JsonNode item : items) {
+                int lprice = item.path("lprice").asInt();
+
+                int shippingFee = (lprice < 3000) ? 3000 : 0;
+                int finalTotalPrice = lprice + shippingFee;
+
                 products.add(new ProductDto(
                         item.path("mallName").asText(), // 쇼핑몰 이름 (source)
                         item.path("title").asText(),    // 상품명
-                        item.path("lprice").asInt(),    // 가격
+                        finalTotalPrice,
                         item.path("link").asText()      // 링크
                 ));
             }
